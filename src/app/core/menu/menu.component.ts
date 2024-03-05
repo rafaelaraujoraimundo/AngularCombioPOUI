@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { PoMenuItem } from '@po-ui/ng-components';
+import { CoreService } from '../core.service';
 
 @Component({
   selector: 'app-menu',
@@ -9,9 +10,7 @@ import { PoMenuItem } from '@po-ui/ng-components';
 })
 export class MenuComponent {
 
-  @Output() labelEmitted = new EventEmitter<string>();
-
-  constructor(private router: Router) {}
+  constructor(private router: Router, private coreService: CoreService) {}
   logoPath: string = './assets/Logo.png';
   menuItemSelected: string = '';
   readonly menus: Array<PoMenuItem> = [
@@ -30,7 +29,7 @@ export class MenuComponent {
   ];
 
   private goMenu(link: string, title: string) {
-    this.labelEmitted.emit(title)
+    this.coreService.emitSignal(title);
     this.router.navigate([link])
   }
 

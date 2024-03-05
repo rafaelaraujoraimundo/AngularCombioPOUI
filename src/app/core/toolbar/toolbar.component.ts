@@ -1,24 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PoDialogService, PoMenuItem, PoNotificationService, PoToolbarAction, PoToolbarProfile } from '@po-ui/ng-components';
 import { MenuComponent } from '../menu/menu.component';
+import { Subscription } from 'rxjs';
+import { CoreService } from '../core.service';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.css']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnDestroy {
   
-  constructor(private poDialog: PoDialogService, private poNotification: PoNotificationService, private menuComponent: MenuComponent) {  }
+
   title: string = 'Combio';
+  private subscription: Subscription;
+
+  constructor(private poDialog: PoDialogService, private poNotification: PoNotificationService, private coreService: CoreService) { 
+
+    this.subscription = this.coreService.getSignalObservable().subscribe(data => {
+      this.title = data;
+    });
+   }
+ 
 
 
   
-  ngOnInit(): void {
-    this.menuComponent.labelEmitted.subscribe(label => {
-      this.title = label
-    });
-  }
 
   profile: PoToolbarProfile = {
     avatar: 'https://via.placeholder.com/48x48?text=AVATAR',
@@ -36,5 +42,10 @@ export class ToolbarComponent implements OnInit {
   showAction(item: PoToolbarAction): void {
     this.poNotification.success(`Action clicked: ${item.label}`);
   }
+
+  ngOnDestroy(): void {
+  
+  }
+
 
 }
