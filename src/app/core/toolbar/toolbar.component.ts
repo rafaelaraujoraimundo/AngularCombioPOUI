@@ -1,16 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PoDialogService, PoMenuItem, PoNotificationService, PoToolbarAction, PoToolbarProfile } from '@po-ui/ng-components';
+import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.css']
 })
-export class ToolbarComponent {
+export class ToolbarComponent implements OnInit {
   
-  constructor(private poDialog: PoDialogService, private poNotification: PoNotificationService) {  }
+  constructor(private poDialog: PoDialogService, private poNotification: PoNotificationService, private menuComponent: MenuComponent) {  }
   title: string = 'Combio';
+
+
   
+  ngOnInit(): void {
+    this.menuComponent.labelEmitted.subscribe(label => {
+      this.title = label
+    });
+  }
 
   profile: PoToolbarProfile = {
     avatar: 'https://via.placeholder.com/48x48?text=AVATAR',
